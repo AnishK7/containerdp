@@ -1,0 +1,20 @@
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ambassador
+spec:
+  containers:
+  - image: anishkatkamwar/main-container
+    name: main-container
+    imagePullPolicy: Always
+    resources: {}
+    ports:
+      - containerPort: 9000
+  - image: anishkatkamwar/ambassador
+    name: ambassador-container
+    imagePullPolicy: Always
+    resources: {}
+    ports:
+      - containerPort: 3000
+  dnsPolicy: Default

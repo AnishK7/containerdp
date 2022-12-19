@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: adapter
+spec:
+  containers:
+  - image: busybox
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo $(date -u) > /var/log/proc.txt && top -n 1 -b >> /var/log/proc.txt; sleep 5;done"]
+    name: main-container
+    volumeMounts:
+    - name: shared-vol
+      mountPath: /var/log
+  - image: busybox
+    name: adapter-container
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do (cat /var/log/proc.txt >> /var/log/adapterlog.txt) && (echo 'Read from adapter container' >> /var/log/adapterlog.txt); sleep 5;done"]
+    volumeMounts:
+    - name: shared-vol
+      mountPath: /var/log
+  volumes:
+  - name: shared-vol
+    emptyDir: {}
